@@ -1,8 +1,8 @@
-import { defineStore } from "pinia";
-import { useRouter } from "vue-router";
-import { useAuthStore } from "@/stores/AuthStore";
-import { usePostsStore } from "@/stores/PostsStore";
-import { useEditorStore } from "@/stores/EditorStore";
+import { defineStore } from 'pinia';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/AuthStore';
+import { usePostsStore } from '@/stores/PostsStore';
+import { useEditorStore } from '@/stores/EditorStore';
 
 import {
   collection,
@@ -13,13 +13,13 @@ import {
   updateDoc,
   serverTimestamp,
   Timestamp,
-  deleteDoc,
-} from "firebase/firestore";
-import { ref, computed } from "vue";
-import { useLocalStorage } from "@vueuse/core";
-import { useNotificationStore } from "@/stores/NotificationStore";
+  deleteDoc
+} from 'firebase/firestore';
+import { ref, computed } from 'vue';
+import { useLocalStorage } from '@vueuse/core';
+import { useNotificationStore } from '@/stores/NotificationStore';
 
-export const usePostStore = defineStore("post", () => {
+export const usePostStore = defineStore('post', () => {
   // Stores
   const authStore = useAuthStore();
   const postsStore = usePostsStore();
@@ -29,55 +29,53 @@ export const usePostStore = defineStore("post", () => {
   const router = useRouter();
 
   // Post Fields
-  const content = ref<string>("");
+  const content = ref<string>('');
   const date = ref<Timestamp | null>(null);
   function excerpt(): string {
     const string = content.value.match(/<p>[^<>]+<\/p>/);
-    console.log(string);
-    return string ? string.join("") : "";
+    return string ? string.join('') : '';
   }
-  const imageUrl = ref<string>("");
-  const postId = useLocalStorage<string>("post:postId", "");
-  const status = ref<"publish" | "draft">("draft");
-  const title = ref<string>("");
+  const imageUrl = ref<string>('');
+  const postId = useLocalStorage<string>('post:postId', '');
+  const status = ref<'publish' | 'draft'>('draft');
+  const title = ref<string>('');
 
   // For Fetch Data
   const postRef = computed(() => {
-    return doc(getFirestore(), "posts", postId.value);
+    return doc(getFirestore(), 'posts', postId.value);
   });
 
   // Fetch Data Functions
   async function postNew() {
-    const newPostRef = doc(collection(getFirestore(), "posts"));
+    const newPostRef = doc(collection(getFirestore(), 'posts'));
     try {
       await setDoc(newPostRef, {
         authorId: authStore.user?.uid,
-        content: "",
+        content: '',
         date: null,
-        excerpt: "",
-        imageUrl: "",
+        excerpt: '',
+        imageUrl: '',
         modified: serverTimestamp(),
         slug: newPostRef.id,
-        status: "draft",
-        title: "",
+        status: 'draft',
+        title: ''
       });
 
       router.push({
-        name: "post-edit",
+        name: 'post-edit',
         params: {
-          postId: newPostRef.id,
-        },
+          postId: newPostRef.id
+        }
       });
-    } catch (error) {
-      console.log(error);
       notificationStore.showNotification(
-        1,
-        "Something went wrong!",
-        "Failed to create a new post, please contact technical support."
+        0,
+        'Operation successful',
+        'Post created successfully. You can start editing now.'
       );
+    } catch (error: any) {
+      notificationStore.showNotification(1, error.code, error.message);
     }
   }
-
   async function postSave() {
     clearTimeout(editorStore.timer);
     try {
@@ -86,20 +84,11 @@ export const usePostStore = defineStore("post", () => {
         excerpt: excerpt(),
         imageUrl: imageUrl.value,
         modified: serverTimestamp(),
-        title: title.value,
+        title: title.value
       });
-      notificationStore.showNotification(
-        0,
-        "Operation Successful",
-        "Post saved successfully."
-      );
-    } catch (error) {
-      console.log(error);
-      notificationStore.showNotification(
-        1,
-        "Something went wrong!",
-        "Failed to save post, please contact technical support."
-      );
+      notificationStore.showNotification(0, 'Operation successful', 'Post saved successfully.');
+    } catch (error: any) {
+      notificationStore.showNotification(1, error.code, error.message);
     }
   }
   async function postPublish() {
@@ -112,30 +101,21 @@ export const usePostStore = defineStore("post", () => {
           excerpt: excerpt(),
           imageUrl: imageUrl.value,
           modified: serverTimestamp(),
-          status: "publish",
-          title: title.value,
+          status: 'publish',
+          title: title.value
         });
       } else {
         await updateDoc(postRef.value, {
           content: content.value,
           excerpt: excerpt(),
           modified: serverTimestamp(),
-          status: "publish",
-          title: title.value,
+          status: 'publish',
+          title: title.value
         });
       }
-      notificationStore.showNotification(
-        0,
-        "Operation Successful",
-        "Post published successfully."
-      );
-    } catch (error) {
-      console.log(error);
-      notificationStore.showNotification(
-        1,
-        "Something Went Wrong!",
-        "Failed to publish post, please contact technical support."
-      );
+      notificationStore.showNotification(0, 'Operation successful', 'Post published successfully.');
+    } catch (error: any) {
+      notificationStore.showNotification(1, error.code, error.message);
     }
   }
   async function postUpdate() {
@@ -146,34 +126,25 @@ export const usePostStore = defineStore("post", () => {
         excerpt: excerpt(),
         imageUrl: imageUrl.value,
         modified: serverTimestamp(),
-        title: title.value,
+        title: title.value
       });
-      notificationStore.showNotification(
-        0,
-        "Operation Successful",
-        "Post updated successfully."
-      );
-    } catch (error) {
-      console.log(error);
-      notificationStore.showNotification(
-        1,
-        "Something went wrong!",
-        "Failed to update post, please contact technical support."
-      );
+      notificationStore.showNotification(0, 'Operation Successful', 'Post updated successfully.');
+    } catch (error: any) {
+      notificationStore.showNotification(1, error.code, error.message);
     }
   }
   async function postDraft() {
     try {
       await updateDoc(postRef.value, {
         modified: serverTimestamp(),
-        status: "draft",
+        status: 'draft'
       });
     } catch (error) {
       console.log(error);
       notificationStore.showNotification(
         1,
-        "Something went wrong!",
-        "Failed to switch post to draft, please contact technical support."
+        'Something went wrong!',
+        'Failed to switch post to draft, please contact technical support.'
       );
     }
   }
@@ -189,37 +160,25 @@ export const usePostStore = defineStore("post", () => {
       } else {
         notificationStore.showNotification(
           1,
-          "Something went wrong!",
-          "No such document!"
+          'No such document',
+          'There is no data in the database.'
         );
       }
-    } catch (error) {
-      console.log(error);
-      notificationStore.showNotification(
-        1,
-        "Something went wrong!",
-        "Failed to get post, please contact technical support."
-      );
+    } catch (error: any) {
+      notificationStore.showNotification(1, error.code, error.message);
     }
   }
   async function postDelete(postId: string) {
     try {
-      await deleteDoc(doc(getFirestore(), "posts", postId));
-      postsStore.postsAll = postsStore.postsAll.filter(
-        (p) => p.postId != postId
-      );
+      await deleteDoc(doc(getFirestore(), 'posts', postId));
+      postsStore.postsAll = postsStore.postsAll.filter((p) => p.postId != postId);
       notificationStore.showNotification(
         0,
-        "Operation Successful",
-        "Post has been successfully deleted."
+        'Operation successful',
+        'Post has been successfully deleted.'
       );
-    } catch (error) {
-      console.log(error);
-      notificationStore.showNotification(
-        1,
-        "Something went wrong!",
-        "Failed to delete post, please contact technical support."
-      );
+    } catch (error: any) {
+      notificationStore.showNotification(1, error.code, error.message);
     }
   }
 
@@ -236,6 +195,6 @@ export const usePostStore = defineStore("post", () => {
     postUpdate,
     postDraft,
     postGet,
-    postDelete,
+    postDelete
   };
 });

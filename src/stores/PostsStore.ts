@@ -1,25 +1,19 @@
-import { defineStore } from "pinia";
-import {
-  collection,
-  getDocs,
-  getFirestore,
-  where,
-  query,
-} from "firebase/firestore";
-import { useLocalStorage } from "@vueuse/core";
-import { useNotificationStore } from "@/stores/NotificationStore";
-import type Post from "@/types/Post";
+import { defineStore } from 'pinia';
+import { collection, getDocs, getFirestore, where, query } from 'firebase/firestore';
+import { useLocalStorage } from '@vueuse/core';
+import { useNotificationStore } from '@/stores/NotificationStore';
+import type Post from '@/types/Post';
 
-export const usePostsStore = defineStore("posts", () => {
+export const usePostsStore = defineStore('posts', () => {
   const db = getFirestore();
   const notificationStore = useNotificationStore();
-  const postsAll = useLocalStorage<Post[]>("posts:postsAll", []);
-  const postsPublished = useLocalStorage<Post[]>("posts:postsPublished", []);
+  const postsAll = useLocalStorage<Post[]>('posts:postsAll', []);
+  const postsPublished = useLocalStorage<Post[]>('posts:postsPublished', []);
   async function postsPublishedGet() {
-    const q = query(collection(db, "posts"), where("status", "==", "publish"));
+    const q = query(collection(db, 'posts'), where('status', '==', 'publish'));
     try {
       const querySnapshot = await getDocs(q);
-      console.log("Getting published posts...");
+      console.log('Getting published posts...');
       postsPublished.value = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
@@ -33,22 +27,17 @@ export const usePostsStore = defineStore("posts", () => {
           postId: doc.id,
           slug: data.slug,
           status: data.status,
-          title: data.title,
+          title: data.title
         });
       });
-    } catch (error) {
-      console.log(error);
-      notificationStore.showNotification(
-        1,
-        "Something went wrong!",
-        "Failed to get published posts, please contact technical support."
-      );
+    } catch (error: any) {
+      notificationStore.showNotification(1, error.code, error.message);
     }
   }
   async function postsAllGet() {
     try {
-      const querySnapshot = await getDocs(collection(db, "posts"));
-      console.log("Getting all posts...");
+      const querySnapshot = await getDocs(collection(db, 'posts'));
+      console.log('Getting all posts...');
       postsAll.value = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
@@ -62,22 +51,17 @@ export const usePostsStore = defineStore("posts", () => {
           postId: doc.id,
           slug: data.slug,
           status: data.status,
-          title: data.title,
+          title: data.title
         });
       });
-    } catch (error) {
-      console.log(error);
-      notificationStore.showNotification(
-        1,
-        "Something went wrong!",
-        "Failed to get all posts, please contact technical support."
-      );
+    } catch (error: any) {
+      notificationStore.showNotification(1, error.code, error.message);
     }
   }
   return {
     postsPublishedGet,
     postsAllGet,
     postsPublished,
-    postsAll,
+    postsAll
   };
 });

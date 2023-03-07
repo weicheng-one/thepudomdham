@@ -1,21 +1,21 @@
-import { defineStore } from 'pinia'
-import { initializeApp } from 'firebase/app'
+import { defineStore } from 'pinia';
+import { initializeApp } from 'firebase/app';
 
 export const useInitStore = defineStore('init', () => {
   const firebaseConfig = {
-    apiKey: 'AIzaSyDjEfknvQzy-x6Bg9FLK_fbENFGoB2_6q4',
-    authDomain: 'thepudomdham-cb406.firebaseapp.com',
-    projectId: 'thepudomdham-cb406',
-    storageBucket: 'thepudomdham-cb406.appspot.com',
-    messagingSenderId: '239703040501',
-    appId: '1:239703040501:web:825828ae460e2add07c0bc',
-    measurementId: 'G-VN8860GE57'
-  }
+    apiKey: import.meta.env.VITE_APIKEY,
+    authDomain: import.meta.env.VITE_AUTHDOMAIN,
+    projectId: import.meta.env.VITE_PROJECTID,
+    storageBucket: import.meta.env.VITE_STORAGEBUCKET,
+    messagingSenderId: import.meta.env.VITE_MESSAGINGSENDERID,
+    appId: import.meta.env.VITE_APPID,
+    measurementId: import.meta.env.VITE_MEASUREMENTID
+  };
   function firebaseInit() {
-    initializeApp(firebaseConfig)
+    initializeApp(firebaseConfig);
   }
 
   return {
     firebaseInit
-  }
-})
+  };
+});
