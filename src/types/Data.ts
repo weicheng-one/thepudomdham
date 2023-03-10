@@ -1,5 +1,4 @@
 export default interface Data {
-  fullPath: string;
-  name: string;
-  url: string;
+  email: string;
+  password: string;
 }

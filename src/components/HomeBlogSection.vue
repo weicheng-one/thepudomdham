@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { usePostStore } from "@/stores/PostStore";
-import { usePostsStore } from "@/stores/PostsStore";
-import { onMounted } from "vue";
-import { useDateFormat } from "@vueuse/core";
-import router from "@/router";
-import type Post from "@/types/Post";
+import { usePostStore } from '@/stores/PostStore';
+import { usePostsStore } from '@/stores/PostsStore';
+import { onMounted } from 'vue';
+import { useDateFormat } from '@vueuse/core';
+import router from '@/router';
+import type Post from '@/types/Post';
 const postStore = usePostStore();
 const postsStore = usePostsStore();
 onMounted(() => {
@@ -12,7 +12,7 @@ onMounted(() => {
 });
 function toPostView(post: Post) {
   postStore.postId = post.postId;
-  router.push({ name: "post", params: { slug: post.slug } });
+  router.push({ name: 'post', params: { slug: post.slug } });
 }
 </script>
 <template>
@@ -20,10 +20,10 @@ function toPostView(post: Post) {
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="mx-auto max-w-2xl text-center">
         <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          創造自我價值
+          การเดินทางสู่ประสบการณ์ที่ไม่เคยรู้จัก
         </h2>
         <p class="mt-2 text-lg leading-8 text-gray-600">
-          此部落格為個人部落格，主要記錄一些正在學習和有興趣的事情。
+          เราจะแนะนำสถานที่ท่องเที่ยวและแหล่งท่องเที่ยวที่ยอดเยี่ยมทั่วโลก
         </p>
       </div>
       <div
@@ -34,9 +34,7 @@ function toPostView(post: Post) {
           :key="post.postId"
           class="flex flex-col items-start justify-start"
         >
-          <div
-            class="relative w-full aspect-[16/9] sm:aspect-[2/1] lg:aspect-[3/2]"
-          >
+          <div class="relative w-full aspect-[16/9] sm:aspect-[2/1] lg:aspect-[3/2]">
             <svg
               v-if="post.imageUrl === '' || !post.imageUrl"
               class="absolute w-24 h-24 inset-1/2 -translate-x-1/2 -translate-y-1/2"
@@ -58,20 +56,14 @@ function toPostView(post: Post) {
               alt=""
               class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]"
             />
-            <div
-              class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"
-            ></div>
+            <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
           </div>
           <div class="max-w-xl">
             <div class="mt-8 flex items-center gap-x-4 text-xs">
               <time
-                :datetime="
-                  useDateFormat(post.date.seconds * 1000, 'YYYY-MM-DD').value
-                "
+                :datetime="useDateFormat(post.date.seconds * 1000, 'YYYY-MM-DD').value"
                 class="text-gray-500"
-                >{{
-                  useDateFormat(post.date.seconds * 1000, "MMM DD, YYYY").value
-                }}</time
+                >{{ useDateFormat(post.date.seconds * 1000, 'MMM DD, YYYY').value }}</time
               >
             </div>
             <div class="group relative">
@@ -84,7 +76,7 @@ function toPostView(post: Post) {
                 </a>
               </h3>
               <p class="mt-5 text-sm leading-6 text-gray-600 line-clamp-3">
-                {{ post.excerpt.replace(/<\/?.+?>/g, "") }}
+                {{ post.excerpt.replace(/<\/?.+?>/g, '') }}
               </p>
             </div>
           </div>

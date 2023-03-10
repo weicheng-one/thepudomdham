@@ -1,19 +1,17 @@
 <script setup lang="ts">
-import HomeHeader from "@/components/HomeHeader.vue";
-import { usePostStore } from "@/stores/PostStore";
-import { usePostsStore } from "@/stores/PostsStore";
-import { useDateFormat } from "@vueuse/core";
+import NavbarMain from '@/components/NavbarMain.vue';
+import { usePostStore } from '@/stores/PostStore';
+import { usePostsStore } from '@/stores/PostsStore';
+import { useDateFormat } from '@vueuse/core';
 
 const postStore = usePostStore();
 const postsStore = usePostsStore();
 
-const post = postsStore.postsPublished.find(
-  (post) => post.postId === postStore.postId
-);
+const post = postsStore.postsPublished.find((post) => post.postId === postStore.postId);
 </script>
 
 <template>
-  <HomeHeader />
+  <NavbarMain :theme-light="true" />
   <div class="bg-white pt-5 pb-24 md:pt-10 sm:pb-32 px-6 lg:px-8" v-if="post">
     <div class="mx-auto max-w-3xl text-base leading-7 text-gray-700">
       <img
@@ -29,19 +27,12 @@ const post = postsStore.postsPublished.find(
       </h1>
       <div class="mb-10">
         <time
-          :datetime="
-            useDateFormat(post.date.seconds * 1000, 'YYYY-MM-DD').value
-          "
+          :datetime="useDateFormat(post.date.seconds * 1000, 'YYYY-MM-DD').value"
           class="text-gray-500"
-          >{{
-            useDateFormat(post.date.seconds * 1000, "MMM DD, YYYY").value
-          }}</time
+          >{{ useDateFormat(post.date.seconds * 1000, 'MMM DD, YYYY').value }}</time
         >
       </div>
-      <div
-        class="max-w-2xl mx-auto prose prose-lg prose-indigo"
-        v-html="post.content"
-      ></div>
+      <div class="max-w-2xl mx-auto prose prose-lg prose-indigo" v-html="post.content"></div>
     </div>
   </div>
 </template>

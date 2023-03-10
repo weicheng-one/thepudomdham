@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import { usePostStore } from "@/stores/PostStore";
-import { useEditorStore } from "@/stores/EditorStore";
+import { usePostStore } from '@/stores/PostStore';
+import { useEditorStore } from '@/stores/EditorStore';
 const postStore = usePostStore();
 const editorStore = useEditorStore();
 </script>
 <template>
-  <div
-    class="max-w-7xl mx-auto p-6 lg:px-8 md:flex md:items-center md:justify-between"
-  >
+  <div class="max-w-7xl mx-auto p-6 lg:px-8 md:flex md:items-center md:justify-between">
     <div class="min-w-0 flex-1">
       <RouterLink :to="{ name: 'posts-management' }">
         <h2
@@ -19,7 +17,7 @@ const editorStore = useEditorStore();
     </div>
     <div class="mt-4 flex md:mt-0 md:ml-4">
       <button
-        v-if="postStore.status == 'draft'"
+        v-if="postStore.status === 'draft'"
         type="button"
         :disabled="!editorStore.editable"
         @click="postStore.postSave"
@@ -37,7 +35,7 @@ const editorStore = useEditorStore();
         Switch to draft
       </button>
       <button
-        v-if="postStore.status == 'draft'"
+        v-if="postStore.status === 'draft'"
         type="button"
         :disabled="!editorStore.editable"
         @click="postStore.postPublish"

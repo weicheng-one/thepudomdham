@@ -67,11 +67,6 @@ export const usePostStore = defineStore('post', () => {
           postId: newPostRef.id
         }
       });
-      notificationStore.showNotification(
-        0,
-        'Operation successful',
-        'Post created successfully. You can start editing now.'
-      );
     } catch (error: any) {
       notificationStore.showNotification(1, error.code, error.message);
     }
@@ -86,7 +81,6 @@ export const usePostStore = defineStore('post', () => {
         modified: serverTimestamp(),
         title: title.value
       });
-      notificationStore.showNotification(0, 'Operation successful', 'Post saved successfully.');
     } catch (error: any) {
       notificationStore.showNotification(1, error.code, error.message);
     }
@@ -113,7 +107,7 @@ export const usePostStore = defineStore('post', () => {
           title: title.value
         });
       }
-      notificationStore.showNotification(0, 'Operation successful', 'Post published successfully.');
+      status.value = 'publish';
     } catch (error: any) {
       notificationStore.showNotification(1, error.code, error.message);
     }
@@ -128,7 +122,6 @@ export const usePostStore = defineStore('post', () => {
         modified: serverTimestamp(),
         title: title.value
       });
-      notificationStore.showNotification(0, 'Operation Successful', 'Post updated successfully.');
     } catch (error: any) {
       notificationStore.showNotification(1, error.code, error.message);
     }
@@ -139,13 +132,9 @@ export const usePostStore = defineStore('post', () => {
         modified: serverTimestamp(),
         status: 'draft'
       });
-    } catch (error) {
-      console.log(error);
-      notificationStore.showNotification(
-        1,
-        'Something went wrong!',
-        'Failed to switch post to draft, please contact technical support.'
-      );
+      status.value = 'draft';
+    } catch (error: any) {
+      notificationStore.showNotification(1, error.code, error.message);
     }
   }
   async function postGet() {
@@ -172,11 +161,6 @@ export const usePostStore = defineStore('post', () => {
     try {
       await deleteDoc(doc(getFirestore(), 'posts', postId));
       postsStore.postsAll = postsStore.postsAll.filter((p) => p.postId != postId);
-      notificationStore.showNotification(
-        0,
-        'Operation successful',
-        'Post has been successfully deleted.'
-      );
     } catch (error: any) {
       notificationStore.showNotification(1, error.code, error.message);
     }

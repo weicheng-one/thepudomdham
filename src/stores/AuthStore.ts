@@ -20,7 +20,7 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = u;
   });
 
-  async function signInUser(email: string, password: string) {
+  async function userSignIn(email: string, password: string) {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       router.push({ name: 'home' });
@@ -33,7 +33,7 @@ export const useAuthStore = defineStore('auth', () => {
       notificationStore.showNotification(1, error.code, error.message);
     }
   }
-  async function signOutUser() {
+  async function userSignOut() {
     try {
       await signOut(auth);
       notificationStore.showNotification(
@@ -45,7 +45,7 @@ export const useAuthStore = defineStore('auth', () => {
       notificationStore.showNotification(1, error.code, error.message);
     }
   }
-  async function forgotPassword(email: string) {
+  async function userForgot(email: string) {
     try {
       await sendPasswordResetEmail(auth, email);
       notificationStore.showNotification(
@@ -59,8 +59,8 @@ export const useAuthStore = defineStore('auth', () => {
   }
   return {
     user,
-    signInUser,
-    signOutUser,
-    forgotPassword
+    userSignIn,
+    userSignOut,
+    userForgot
   };
 });

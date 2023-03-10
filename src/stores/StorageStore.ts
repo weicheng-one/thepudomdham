@@ -10,18 +10,14 @@ import {
 import { ref as vueRef } from 'vue';
 import { useLocalStorage } from '@vueuse/core';
 import { useNotificationStore } from '@/stores/NotificationStore';
+import type StorageData from '@/types/StorageData';
 
 export const useStorageStore = defineStore('storage', () => {
   const notificationStore = useNotificationStore();
-  interface Data {
-    fullPath: string;
-    name: string;
-    url: string;
-  }
   const storage = getStorage();
   const openFileManager = vueRef(false);
   const storageRef = ref(storage, '/');
-  const files = useLocalStorage<Data[]>('storage:data', []);
+  const files = useLocalStorage<StorageData[]>('storage:data', []);
 
   async function filesGet() {
     //Start getting all files

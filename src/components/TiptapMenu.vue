@@ -1,26 +1,25 @@
 <script setup lang="ts">
-import { useStorageStore } from "@/stores/StorageStore";
-import TiptapMenuButton from "./TiptapMenuButton.vue";
-import TiptapMenuDivider from "./TiptapMenuDivider.vue";
-const storageStore = useStorageStore();
+import TiptapMenuButton from './TiptapMenuButton.vue';
+import TiptapMenuDivider from './TiptapMenuDivider.vue';
 defineEmits([
-  "toggleBold",
-  "toggleItalic",
-  "toggleStrike",
-  "toggleCode",
-  "toggleHighlight",
-  "toggleHeadingLevel1",
-  "toggleHeadingLevel2",
-  "setParagraph",
-  "toggleBulletList",
-  "toggleOrderedList",
-  "toggleTaskList",
-  "toggleCodeBlock",
-  "toggleBlockQuote",
-  "setHorizontalRule",
-  "setHardBreak",
-  "clearFormat",
-  "setImage",
+  'toggleBold',
+  'toggleItalic',
+  'toggleStrike',
+  'toggleCode',
+  'toggleHighlight',
+  'toggleHeadingLevel1',
+  'toggleHeadingLevel2',
+  'setParagraph',
+  'toggleBulletList',
+  'toggleOrderedList',
+  'toggleTaskList',
+  'toggleCodeBlock',
+  'toggleBlockQuote',
+  'setHorizontalRule',
+  'setHardBreak',
+  'clearFormat',
+  'setImage',
+  'setLink'
 ]);
 </script>
 <template>
@@ -79,5 +78,8 @@ defineEmits([
   <TiptapMenuDivider />
   <TiptapMenuButton @click="$emit('setImage')" title="Image">
     <i class="ri-image-fill text-xl"></i>
+  </TiptapMenuButton>
+  <TiptapMenuButton @click="$emit('setLink')" title="Link">
+    <i class="ri-link text-xl"></i>
   </TiptapMenuButton>
 </template>

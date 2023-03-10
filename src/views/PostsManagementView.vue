@@ -1,34 +1,32 @@
 <script setup lang="ts">
-import HomeHeader from "@/components/HomeHeader.vue";
-import { usePostStore } from "@/stores/PostStore";
-import { usePostsStore } from "@/stores/PostsStore";
-import { useDateFormat } from "@vueuse/core";
-import { onBeforeMount } from "vue";
+import HomeHeader from '@/components/NavbarAdmin.vue';
+import { usePostStore } from '@/stores/PostStore';
+import { usePostsStore } from '@/stores/PostsStore';
+import { useDateFormat } from '@vueuse/core';
+import { onBeforeMount } from 'vue';
 const postStore = usePostStore();
 const postsStore = usePostsStore();
 onBeforeMount(() => {
   postsStore.postsAllGet();
 });
 function dateFormat(date: number) {
-  return useDateFormat(date * 1000, "YYYY/MM/DD hh:mm").value;
+  return useDateFormat(date * 1000, 'YYYY/MM/DD hh:mm').value;
 }
 function postDelete(postId: string, title: string) {
-  if (window.confirm(`Do you want to delete "${title || "Untitled"}"?`)) {
+  if (window.confirm(`Do you want to delete "${title || 'Untitled'}"?`)) {
     postStore.postDelete(postId);
   }
 }
 </script>
 <template>
   <HomeHeader />
-  <div
-    class="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pt-5 md:pt-10 pb-24 sm:pb-32"
-  >
+  <div class="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pt-5 md:pt-10 pb-24 sm:pb-32">
     <div class="sm:flex sm:items-center">
       <div class="sm:flex-auto">
         <h1 class="text-base font-semibold leading-6 text-gray-900">Posts</h1>
         <p class="mt-2 text-sm text-gray-700">
-          On this page, you can perform functions such as editing, creating, and
-          deleting posts, making it convenient for you to manage your posts.
+          On this page, you can perform functions such as editing, creating, and deleting posts,
+          making it convenient for you to manage your posts.
         </p>
       </div>
       <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
@@ -62,20 +60,17 @@ function postDelete(postId: string, title: string) {
             </th>
           </tr>
         </thead>
-        <tbody
-          class="divide-y divide-gray-200 bg-white"
-          v-if="postsStore.postsAll"
-        >
+        <tbody class="divide-y divide-gray-200 bg-white" v-if="postsStore.postsAll">
           <tr v-for="post in postsStore.postsAll" :key="post.postId">
             <td
               class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0"
             >
-              {{ post.title || "Untitled" }}
+              {{ post.title || 'Untitled' }}
               <dl class="font-normal lg:hidden">
                 <dt class="sr-only sm:hidden">Date</dt>
                 <dd class="mt-1 truncate text-gray-500 sm:hidden">
                   {{
-                    post.status === "draft"
+                    post.status === 'draft'
                       ? `Last Modified ${dateFormat(post.modified.seconds)}`
                       : `Published ${dateFormat(post.date.seconds)}`
                   }}
@@ -84,7 +79,7 @@ function postDelete(postId: string, title: string) {
             </td>
             <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
               {{
-                post.status === "draft"
+                post.status === 'draft'
                   ? `Last Modified ${dateFormat(post.modified.seconds)}`
                   : `Published ${dateFormat(post.date.seconds)}`
               }}
@@ -93,14 +88,10 @@ function postDelete(postId: string, title: string) {
               <RouterLink
                 :to="{ name: 'post-edit', params: { postId: post.postId } }"
                 class="text-indigo-500 hover:text-indigo-600"
-                >Edit<span class="sr-only"
-                  >, {{ post.postId }}</span
-                ></RouterLink
+                >Edit<span class="sr-only">, {{ post.postId }}</span></RouterLink
               >
             </td>
-            <td
-              class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0"
-            >
+            <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
               <a
                 href="javascript:;"
                 @click="postDelete(post.postId, post.title)"
