@@ -44,6 +44,7 @@ const editor = useEditor({
   onCreate: async ({ editor }) => {
     await postStore.postGet();
     editorStore.editable = true;
+    editorStore.autoSave = false;
     editor.commands.setContent(postStore.content);
     editor.setEditable(editorStore.editable);
   },

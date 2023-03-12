@@ -1,22 +1,51 @@
 import { defineStore } from 'pinia';
-import { collection, getDocs, getFirestore, where, query } from 'firebase/firestore';
-import { useLocalStorage } from '@vueuse/core';
+import {
+  collection,
+  getDocs,
+  getFirestore,
+  where,
+  query,
+  orderBy,
+  limit,
+  startAfter
+} from 'firebase/firestore';
 import { useNotificationStore } from '@/stores/NotificationStore';
+import { ref } from 'vue';
 import type Post from '@/types/Post';
+import type { Query, QueryDocumentSnapshot } from 'firebase/firestore';
 
 export const usePostsStore = defineStore('posts', () => {
   const db = getFirestore();
   const notificationStore = useNotificationStore();
-  const postsAll = useLocalStorage<Post[]>('posts:postsAll', []);
-  const postsPublished = useLocalStorage<Post[]>('posts:postsPublished', []);
+  const postsAll = ref<Post[]>([]);
+  const postsPublished = ref<Post[]>([]);
+  const showBtn = ref<boolean>(false);
+  const lastResult = ref<boolean>(false);
+  const lastVisible = ref<QueryDocumentSnapshot>();
+  const q = ref<Query>();
+
   async function postsPublishedGet() {
-    const q = query(collection(db, 'posts'), where('status', '==', 'publish'));
-    try {
-      const querySnapshot = await getDocs(q);
-      console.log('Getting published posts...');
+    if (lastVisible.value) {
+      q.value = query(
+        collection(db, 'posts'),
+        where('status', '==', 'publish'),
+        orderBy('date', 'desc'),
+        startAfter(lastVisible.value),
+        limit(6)
+      );
+    } else {
       postsPublished.value = [];
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
+      q.value = query(
+        collection(db, 'posts'),
+        where('status', '==', 'publish'),
+        orderBy('date', 'desc'),
+        limit(6)
+      );
+    }
+    try {
+      const querySnapshot = await getDocs(q.value);
+      querySnapshot.forEach((post) => {
+        const data = post.data();
         postsPublished.value.push({
           authorId: data.authorId,
           content: data.content,
@@ -24,23 +53,38 @@ export const usePostsStore = defineStore('posts', () => {
           excerpt: data.excerpt,
           imageUrl: data.imageUrl,
           modified: data.modified,
-          postId: doc.id,
+          postId: post.id,
           slug: data.slug,
           status: data.status,
           title: data.title
         });
       });
+      lastVisible.value = querySnapshot.docs[querySnapshot.docs.length - 1];
+      if (!lastVisible.value) {
+        lastResult.value = true;
+      } else {
+        showBtn.value = true;
+      }
     } catch (error: any) {
       notificationStore.showNotification(1, error.code, error.message);
     }
   }
   async function postsAllGet() {
-    try {
-      const querySnapshot = await getDocs(collection(db, 'posts'));
-      console.log('Getting all posts...');
+    if (lastVisible.value) {
+      q.value = query(
+        collection(db, 'posts'),
+        orderBy('date', 'desc'),
+        startAfter(lastVisible.value),
+        limit(6)
+      );
+    } else {
       postsAll.value = [];
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
+      q.value = query(collection(db, 'posts'), orderBy('date', 'desc'), limit(6));
+    }
+    try {
+      const querySnapshot = await getDocs(q.value);
+      querySnapshot.forEach((post) => {
+        const data = post.data();
         postsAll.value.push({
           authorId: data.authorId,
           content: data.content,
@@ -48,20 +92,37 @@ export const usePostsStore = defineStore('posts', () => {
           excerpt: data.excerpt,
           imageUrl: data.imageUrl,
           modified: data.modified,
-          postId: doc.id,
+          postId: post.id,
           slug: data.slug,
           status: data.status,
           title: data.title
         });
       });
+      lastVisible.value = querySnapshot.docs[querySnapshot.docs.length - 1];
+      if (!lastVisible.value) {
+        lastResult.value = true;
+      } else {
+        showBtn.value = true;
+      }
     } catch (error: any) {
       notificationStore.showNotification(1, error.code, error.message);
     }
   }
+
+  function $reset() {
+    postsPublished.value = [];
+    postsAll.value = [];
+    showBtn.value = false;
+    lastResult.value = false;
+    lastVisible.value = undefined;
+  }
   return {
     postsPublishedGet,
     postsAllGet,
+    $reset,
     postsPublished,
-    postsAll
+    postsAll,
+    lastResult,
+    showBtn
   };
 });

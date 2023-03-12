@@ -81,6 +81,7 @@ export const usePostStore = defineStore('post', () => {
         modified: serverTimestamp(),
         title: title.value
       });
+      notificationStore.showNotification(0, 'Operation successful', 'The post has been saved.');
     } catch (error: any) {
       notificationStore.showNotification(1, error.code, error.message);
     }
@@ -108,6 +109,11 @@ export const usePostStore = defineStore('post', () => {
         });
       }
       status.value = 'publish';
+      notificationStore.showNotification(
+        0,
+        'Operation successful',
+        'The post has been successfully published.'
+      );
     } catch (error: any) {
       notificationStore.showNotification(1, error.code, error.message);
     }
@@ -122,6 +128,7 @@ export const usePostStore = defineStore('post', () => {
         modified: serverTimestamp(),
         title: title.value
       });
+      notificationStore.showNotification(0, 'Operation successful', 'The update was successful.');
     } catch (error: any) {
       notificationStore.showNotification(1, error.code, error.message);
     }
@@ -161,6 +168,7 @@ export const usePostStore = defineStore('post', () => {
     try {
       await deleteDoc(doc(getFirestore(), 'posts', postId));
       postsStore.postsAll = postsStore.postsAll.filter((p) => p.postId != postId);
+      notificationStore.showNotification(0, 'Operation successful', 'Successfully deleted.');
     } catch (error: any) {
       notificationStore.showNotification(1, error.code, error.message);
     }

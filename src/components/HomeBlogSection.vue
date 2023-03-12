@@ -3,11 +3,13 @@ import { usePostStore } from '@/stores/PostStore';
 import { usePostsStore } from '@/stores/PostsStore';
 import { onMounted } from 'vue';
 import { useDateFormat } from '@vueuse/core';
+import HomeMorePublishedPost from '@/components/HomeMorePublishedPost.vue';
 import router from '@/router';
 import type Post from '@/types/Post';
 const postStore = usePostStore();
 const postsStore = usePostsStore();
 onMounted(() => {
+  postsStore.$reset();
   postsStore.postsPublishedGet();
 });
 function toPostView(post: Post) {
@@ -82,6 +84,7 @@ function toPostView(post: Post) {
           </div>
         </article>
       </div>
+      <HomeMorePublishedPost />
     </div>
   </div>
 </template>

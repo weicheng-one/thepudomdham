@@ -8,6 +8,7 @@ import router from './router';
 // Import CSS
 import './assets/main.css';
 import 'remixicon/fonts/remixicon.css';
+//flig icon
 import '/node_modules/flag-icons/css/flag-icons.min.css';
 
 const app = createApp(App);

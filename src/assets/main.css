@@ -50,7 +50,7 @@
     @apply mx-10 my-4 pl-4 border-l-2 border-solid border-slate-300;
   }
   hr {
-    @apply mt-8 border-t-2;
+    @apply my-8 border-t-2;
   }
   p > a {
     @apply text-blue-500 underline decoration-solid cursor-pointer;

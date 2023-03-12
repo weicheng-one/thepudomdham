@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import HomeHeader from '@/components/NavbarAdmin.vue';
+import PostsManagementMorePosts from '@/components/PostsManagementMorePosts.vue';
 import { usePostStore } from '@/stores/PostStore';
 import { usePostsStore } from '@/stores/PostsStore';
 import { useDateFormat } from '@vueuse/core';
@@ -7,6 +8,7 @@ import { onBeforeMount } from 'vue';
 const postStore = usePostStore();
 const postsStore = usePostsStore();
 onBeforeMount(() => {
+  postsStore.$reset();
   postsStore.postsAllGet();
 });
 function dateFormat(date: number) {
@@ -103,5 +105,6 @@ function postDelete(postId: string, title: string) {
         </tbody>
       </table>
     </div>
+    <PostsManagementMorePosts />
   </div>
 </template>
