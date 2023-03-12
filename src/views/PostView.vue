@@ -32,7 +32,7 @@ const post = postsStore.postsPublished.find((post) => post.postId === postStore.
           >{{ useDateFormat(post.date.seconds * 1000, 'MMM DD, YYYY').value }}</time
         >
       </div>
-      <div class="max-w-2xl mx-auto prose prose-lg prose-indigo" v-html="post.content"></div>
+      <div v-html="post.content"></div>
     </div>
   </div>
 </template>

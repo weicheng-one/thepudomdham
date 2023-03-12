@@ -31,10 +31,15 @@ export const usePostStore = defineStore('post', () => {
   // Post Fields
   const content = ref<string>('');
   const date = ref<Timestamp | null>(null);
-  function excerpt(): string {
-    const string = content.value.match(/<p>[^<>]+<\/p>/);
-    return string ? string.join('') : '';
-  }
+  const excerpt = computed(() => {
+    const regex = /<p>(.*?)<\/p>/i;
+    const match = regex.exec(content.value);
+    if (match) {
+      return match[1];
+    } else {
+      return '';
+    }
+  });
   const imageUrl = ref<string>('');
   const postId = useLocalStorage<string>('post:postId', '');
   const status = ref<'publish' | 'draft'>('draft');
@@ -76,7 +81,7 @@ export const usePostStore = defineStore('post', () => {
     try {
       await updateDoc(postRef.value, {
         content: content.value,
-        excerpt: excerpt(),
+        excerpt: excerpt.value,
         imageUrl: imageUrl.value,
         modified: serverTimestamp(),
         title: title.value
@@ -93,7 +98,7 @@ export const usePostStore = defineStore('post', () => {
         await updateDoc(postRef.value, {
           content: content.value,
           date: serverTimestamp(),
-          excerpt: excerpt(),
+          excerpt: excerpt.value,
           imageUrl: imageUrl.value,
           modified: serverTimestamp(),
           status: 'publish',
@@ -102,7 +107,7 @@ export const usePostStore = defineStore('post', () => {
       } else {
         await updateDoc(postRef.value, {
           content: content.value,
-          excerpt: excerpt(),
+          excerpt: excerpt.value,
           modified: serverTimestamp(),
           status: 'publish',
           title: title.value
@@ -123,7 +128,7 @@ export const usePostStore = defineStore('post', () => {
     try {
       await updateDoc(postRef.value, {
         content: content.value,
-        excerpt: excerpt(),
+        excerpt: excerpt.value,
         imageUrl: imageUrl.value,
         modified: serverTimestamp(),
         title: title.value

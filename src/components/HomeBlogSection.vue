@@ -77,9 +77,10 @@ function toPostView(post: Post) {
                   {{ post.title }}
                 </a>
               </h3>
-              <p class="mt-5 text-sm leading-6 text-gray-600 line-clamp-3">
-                {{ post.excerpt.replace(/<\/?.+?>/g, '') }}
-              </p>
+              <p
+                class="mt-5 text-sm leading-6 text-gray-600 line-clamp-3"
+                v-html="post.excerpt"
+              ></p>
             </div>
           </div>
         </article>
