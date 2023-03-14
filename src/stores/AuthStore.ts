@@ -7,22 +7,20 @@ import {
   sendPasswordResetEmail
 } from 'firebase/auth';
 import { useNotificationStore } from './NotificationStore';
-import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import type { User } from 'firebase/auth';
+import { useLocalStorage } from '@vueuse/core';
 
 export const useAuthStore = defineStore('auth', () => {
   const notificationStore = useNotificationStore();
   const auth = getAuth();
-  const user = ref(auth.currentUser);
+  const user = useLocalStorage<User | null>('auth', null);
   const router = useRouter();
-
-  onAuthStateChanged(auth, (u) => {
-    user.value = u;
-  });
 
   async function userSignIn(email: string, password: string) {
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      user.value = auth.currentUser;
       router.push({ name: 'home' });
       notificationStore.showNotification(
         0,
@@ -36,6 +34,8 @@ export const useAuthStore = defineStore('auth', () => {
   async function userSignOut() {
     try {
       await signOut(auth);
+      user.value = auth.currentUser;
+      router.push({ name: 'home' });
       notificationStore.showNotification(
         0,
         'Successfully logged out',
