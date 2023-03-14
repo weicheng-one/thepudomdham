@@ -1,7 +1,7 @@
-import { defineStore } from "pinia";
-import { ref } from "vue";
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
 
-export const useEditorStore = defineStore("editor", () => {
+export const useEditorStore = defineStore('editor', () => {
   const timer = ref<NodeJS.Timeout>();
   const editable = ref<boolean>(false);
   const autoSave = ref<boolean>(false);

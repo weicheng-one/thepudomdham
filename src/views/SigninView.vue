@@ -2,6 +2,7 @@
 import { useAuthStore } from '@/stores/AuthStore';
 import { ref } from 'vue';
 import type Data from '@/types/Data';
+
 const authStore = useAuthStore();
 
 function loginHandler(data: Data) {

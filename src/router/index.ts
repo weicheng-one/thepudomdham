@@ -15,7 +15,13 @@ const routes = [
   {
     path: '/signin',
     name: 'signin',
-    component: SigninView
+    component: SigninView,
+    beforeEnter: () => {
+      const user = localStorage.getItem('auth:user');
+      if (user) {
+        router.push({ name: 'home' });
+      }
+    }
   },
   {
     path: '/admin/post-edit/:postId',
@@ -40,6 +46,13 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes
+});
+
+router.beforeEach((to) => {
+  const user = localStorage.getItem('auth:user');
+  if (to.meta.requiresAuth && !user) {
+    router.push({ name: 'signin', query: { redirect: to.fullPath } });
+  }
 });
 
 export default router;

@@ -166,20 +166,6 @@ const tabCurrent = ref('Editor');
     />
     <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
   </div>
-  <!--
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
--->
   <div class="mb-3">
     <div class="sm:hidden">
       <label for="tabs" class="sr-only">Select a tab</label>
